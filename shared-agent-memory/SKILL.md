@@ -127,28 +127,30 @@ Every memory should include:
 
 ## Retrieval Discipline
 
-Before answering or acting, search shared memory when the request mentions:
+Search shared memory only when the task depends on durable context that is likely to exist outside the current prompt:
 
-- “remember” / “last time” / “we did this before”
-- a recurring project: Hermes, Argus, atom, Portainer, MCP memory, Qdrant
-- user preferences or workflow conventions
-- infrastructure decisions
-- cross-agent shared knowledge
+- Sean’s stated preferences or recurring corrections
+- prior architecture/product decisions
+- stable environment conventions needed to avoid mistakes
+- a past fix, incident, or runbook the user is referring to
+- cross-agent context explicitly mentioned by the user
 
-Search with a plain-language query. Prefer a few targeted searches over one vague dragnet.
+Do **not** search memory just because a familiar project or service name appears. If live state, source code, git history, or current configuration can answer better, inspect that directly.
+
+Use the narrowest useful query. Prefer one targeted lookup over broad fishing.
 
 ## Storage Discipline
 
-At the end of meaningful work, store a memory only if it is likely to help future agents.
+Store a memory only when it is stable, reusable, and would prevent future re-discovery or repeated user steering.
 
 Ask:
 
 1. Will this still be true next month?
 2. Would rediscovering it waste time or risk mistakes?
 3. Is it more useful as a memory than as live discovery?
-4. Does it avoid secrets and volatile implementation details?
+4. Does it avoid secrets, volatile state, and drifting implementation details?
 
-If yes, store it.
+If yes, store it. If not, leave it in the transcript or inspect the live system next time.
 
 ## MCP Memory REST API
 
