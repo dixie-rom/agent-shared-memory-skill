@@ -2,6 +2,10 @@
 
 Use shared memory as a durability layer, not as a reflex.
 
+## Tool Use
+
+If native MCP-memory tools are available, use them for recall/store/delete/update actions. Use the shared-agent-memory skill as the policy for deciding when and what to recall/store. Use this skill's helper scripts only when native MCP-memory tools are unavailable. Use Qdrant directly only for bulk RAG/document/session retrieval or ingestion, not for routine small memory writes.
+
 ## Recall
 
 Search shared memory only when the current task depends on durable context that is likely to exist outside this prompt, such as:

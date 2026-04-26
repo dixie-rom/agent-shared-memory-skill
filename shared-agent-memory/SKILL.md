@@ -26,6 +26,22 @@ Agents -> MCP memory service -> sqlite_vec today
 
 Treat MCP memory as the **front door** for shared agent memory. Treat Qdrant as the **archive vault** for larger semantic retrieval: session summaries, project docs, runbooks, and RAG chunks.
 
+## Tool/Skill Division of Labor
+
+If the agent has both MCP-memory tools/prompts and this shared-agent-memory skill, use them for different layers:
+
+- **MCP-memory tools** are the action interface. Use them to actually recall, store, update, or delete shared memories when available.
+- **This skill** is the policy and shape guide. Use it to decide whether memory access is warranted, what belongs in memory, what must not be stored, and how to tag/metadata memories.
+- **Helper scripts** in this skill are fallbacks for agents that do not have native MCP-memory tools.
+- **Qdrant** is the archive/RAG substrate for larger semantic retrieval and document/session stores. Do not bypass MCP-memory for ordinary small agent memories unless the task is explicitly about Qdrant/RAG ingestion.
+
+Operational rule:
+
+1. Decide whether recall/store is appropriate using this skill.
+2. If native MCP-memory tools exist, use those.
+3. If native MCP-memory tools do not exist, use `scripts/memory_search.py` or `scripts/memory_store.py`.
+4. Use Qdrant directly only for bulk RAG/doc/session retrieval or ingestion, not for routine preference/fact memory writes.
+
 ## Core Rule
 
 Store **stable, reusable knowledge**. Do **not** store facts that are better rediscovered from live systems, code, git, or APIs.
